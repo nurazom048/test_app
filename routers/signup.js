@@ -9,11 +9,11 @@ const user =require("../models/account_model");
 
 
 
-router.get("/sigup", (req, res)=> {
-    res.send("This is sigup in page");
+router.get("/sighup", (req, res)=> {
+    res.send("This is sighup in page");
  }),
     
-router.post("/sigup",async (req, res)=> {
+router.post("/signup",async (req, res)=> {
     console.log(req.body);
     const account = new user(req.body);
  account.save().then(()=>{
