@@ -10,6 +10,11 @@ const mongoose = require('mongoose');
     require: true,
     unique: true,
      },
+     password:{
+      type: String,
+      require: true,
+    
+       },
      mainpic: {
       type: String,
       default:"",
