@@ -18,7 +18,7 @@ router.post("/signup",async (req, res)=> {
 /// later add hash
     const account = new user({
       name:req.body.name,
-      username:req.username,
+      username:req.body.username,
       password:req.body.password,
       mainpic:req.body.mainpic,
       coverpic:req.body.coverpic,
