@@ -2,6 +2,9 @@ const express = require("express");
 router = express.Router();
 const user =require("../models/account_model");
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+
+
 
 
 
@@ -10,10 +13,18 @@ const mongoose = require("mongoose");
        /// console.log(req.body.password);
         try {
            await user.findOne({ username: req.body.username }).then(u=>{
+    
+         
                  //console.log(u.password);
                 if (!user){res.status(401).json({message: "user not exists"})}
                  ///const isCorrect = await bcrypt.compare(req.body.password, user.password);
                 else if (req.body.password == u.password ){
+                  const token = jwt.sign({ username: u._id }, "ahjkdfhkjsgh");
+                  res.cookie("access_token", token, {
+                    httpOnly: true,
+                  });
+      
+     
                             res.status(200).json(u)
                               console.log("login successfully");
                 }else
