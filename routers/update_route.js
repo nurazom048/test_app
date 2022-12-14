@@ -19,23 +19,19 @@ router.put("/update/:username" , verifyToken, async (req, res, next)=>{
 
    // console.log(req.params.username);
     try {
-   
+        console.log( req.params.username );
+        console.log( req.username.username);
+      
 
-       if( req.params.username ===  req.username.username){
+
+       if( req.params.username ==  req.username.username){
        
-        res.status(200).send("account");
+        console.log(" token Mach")
 
+        res.json({ massage : " login by token"})
 
-
-       } else{
-        console.log("noth macth")
-       }
-     //console.log(req.params.username);
-
-           // res.json({ m :req.params.username})
-
-       //     //await console.log(req.params.username);
-       // }
+       }else{console.log("not Mach")}
+ 
        
     }catch (err) {throw(err)}
 } );
