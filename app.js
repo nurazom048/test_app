@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const app = express();
 const loginroutes = require("./routers/signup");
 const singinroute = require("./routers/login.route");
+const updatuser = require("./routers/update_route");
 var cookieParser = require('cookie-parser')
 
 
@@ -13,8 +14,10 @@ mongoose.connect("mongodb+srv://azomazom:rr1234@cluster0.febfuth.mongodb.net/?re
 
 app.use(cookieParser());
 app.use(express.json());
+app.use("/",updatuser);
 // singing route
 app.use("/auth",loginroutes);
+
 // singing route
 app.use(express.json());
 app.use("/auth",singinroute);

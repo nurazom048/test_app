@@ -5,6 +5,7 @@
         "loginroutes",
         "mainpic",
         "noteapp",
-        "singinroute"
+        "singinroute",
+        "varifiedtoken"
     ]
 }
