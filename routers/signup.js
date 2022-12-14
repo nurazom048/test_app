@@ -9,14 +9,21 @@ const user =require("../models/account_model");
 
 
 
-router.get("/sighup", (req, res)=> {
+router.get("/signup", (req, res)=> {
     res.send("This is sighup in page");
  }),
     
 router.post("/signup",async (req, res)=> {
     console.log(req.body);
-    const account = new user(req.body);
- account.save().then(()=>{
+/// later add hash
+    const account = new user({
+      name:req.body.name,
+      username:req.username,
+      password:req.body.password,
+      mainpic:req.body.mainpic,
+      coverpic:req.body.coverpic,
+});
+account.save().then(()=>{
     res.status(200).send(account);
  }).catch((err)=>{
     res.send(err);
