@@ -1,16 +1,21 @@
- const jwt = require ("jsonwebtoken");
 
 
+const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-  const token = req.cookies.access_token;
-  if (!token) {console.log( "You are not authenticated!"); }
+    try {
 
-
-  jwt.verify(token, "ahjkdfhkjsgh", (err, tokenuser) => { 
-    if (err) {console.log( "Token is not valid!");}
-    req.username = tokenuser;
-    next()
-  });
+        const token = req.headers.authorization.split(" ")[1];
+ 
+        const decoded = jwt.verify(token,"ahjkdfhkjsgh");
+        req.username = decoded;
+        //console.log( decoded );
+        next();
+    } catch (error) {
+      //console.log(req.headers.authorization);
+        return res.status(401).json({
+            message: 'Auth failed'
+          
+        });
+    }
 };
-//export default verifyToken;

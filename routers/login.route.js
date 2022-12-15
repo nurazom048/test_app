@@ -15,24 +15,21 @@ const jwt = require("jsonwebtoken");
            await user.findOne({ username: req.body.username }).then(u=>{
     
          
-                 //console.log(u.password);
-                if (!user){res.status(401).json({message: "user not exists"})}
-                 ///const isCorrect = await bcrypt.compare(req.body.password, user.password);
-                else if (req.body.password == u.password ){
-                  const token = jwt.sign({ username: u._id }, "ahjkdfhkjsgh");
-                  res.cookie("access_token", token, {
-                    httpOnly: true,
-                  });
-      
-     
-                            res.status(200).json(u)
-                              console.log("login successfully");
-                }else
-                  { res.status(401).json({message: "Auth not match"})}; });
+               
+             if (!user){res.status(401).json({message: "user not exists"})}
+                 else if (req.body.password === u.password )
+                       {
+                      const token = jwt.sign({ username: u.username }, "ahjkdfhkjsgh");
+                      // res.cookie("access_token", token, {
+                      // httpOnly: true,
+                      //  });
+                      res.status(200).json({toke:  token})
+                      console.log("login successfully");
+                      }else{ res.status(401).json({message: "Auth not match"})}; });
          
 
 
-        }catch (err) {throw(err)}
+       }catch (err) {throw(err)}
            
 
 
@@ -41,24 +38,5 @@ const jwt = require("jsonwebtoken");
 
 });
 module.exports = router;
-//         res.send("This is login page");});
-        
-//  router.post("/login", (req, res,next)=> {
-//         user.find({ username: req.body.username})
-//         .exec()
-//         .then(()=>{  if( req.body.name === user[0].name ){
-//                 res.status(401).json({
-//                         message: "Auth match"
-//                       })
-//         }else{
-                
-//               res.status(401).json({
-//                 message: "Auth not match"
-//               })
-//         }
-                 
-//         }),
-        
-//         console.log(req.body);
 
 

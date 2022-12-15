@@ -14,23 +14,25 @@ router.get("/update",async (req, res)=> {
 
 
 
-//  login
+// ****************  update user  ****************//
 router.put("/update/:username" , verifyToken, async (req, res, next)=>{
 
-   // console.log(req.params.username);
+   console.log(req.body.name);
     try {
-        console.log( req.params.username );
-        console.log( req.username.username);
-      
+        // console.log( req.params.username );
+        // console.log( req.username.username);
+        //  console.log( req.params.username );
+     if( req.params.username ===  req.username.username){
+        const   updateduser = await user.findOneAndUpdate(req.username.username,
+            { name:req.body.name,
+                password:req.body.password,
+                mainpic:req.body.mainpic,
+                coverpic :req.body.coverpic
+             },{new : true})
+            console.log(updateduser)
+            res.json([updateduser,{ massage : "your Account is updated "}])
 
-
-       if( req.params.username ==  req.username.username){
-       
-        console.log(" token Mach")
-
-        res.json({ massage : " login by token"})
-
-       }else{console.log("not Mach")}
+            }else{ res.json({massage:"You can Only update your account"})}
  
        
     }catch (err) {throw(err)}
