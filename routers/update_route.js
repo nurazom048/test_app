@@ -43,7 +43,7 @@ router.put("/update/:username" , verifyToken, async (req, res, next)=>{
 router.put("/delete/:username" , verifyToken, async (req, res, next)=>{
 
     console.log(req.body.name);
-     try {
+    try {
        
       if( req.params.username ===  req.username.username){
        
@@ -54,7 +54,7 @@ router.put("/delete/:username" , verifyToken, async (req, res, next)=>{
             {res.json({massage:"You can  delete your Only account"})}
   
         
-     }catch (err) {throw(err)}
+    }catch (err) {throw(err)}
  } );
             
 module.exports = router;
