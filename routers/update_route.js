@@ -57,5 +57,5 @@ router.put("/delete/:username" , verifyToken, async (req, res, next)=>{
     }catch (err) {throw(err)}
  } );
             
-module.exports = router;
+ module.exports = router;
 
