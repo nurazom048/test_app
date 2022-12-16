@@ -17,7 +17,6 @@ const verifyToken = require("../verifyToken");
 // });
 
 
-
 //  login
 router.post("/videos/upload", verifyToken ,async (req, res)=> {
     //console.log(req.username) ;
@@ -37,4 +36,3 @@ router.post("/videos/upload", verifyToken ,async (req, res)=> {
 });
 
 module.exports = router;
-
