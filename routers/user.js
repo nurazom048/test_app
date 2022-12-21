@@ -20,8 +20,9 @@ router.put("/fllow/:username" , verifyToken, async (req, res, next)=>{
   await u.updateOne({$push: {follower: tokenowner.username  }},{new : true});
   res.status(200).json({message: "fallowing success"});
   
- console.log(u);
- console.log(you);
+console.log(u);
+console.log(you);
+
    } else {
       res.status(401).json({message: "you cannot fllow yourself"});
 }
