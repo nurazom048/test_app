@@ -26,6 +26,14 @@ const mongoose = require('mongoose');
       default:"",
     
      },
+     follower: {
+      unique: true,
+      type: [String],
+    },
+    flowing: {
+      unique: true,
+      type: [String],
+    }
   
   });
 

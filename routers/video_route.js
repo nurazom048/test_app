@@ -35,4 +35,23 @@ router.post("/videos/upload", verifyToken ,async (req, res)=> {
 
 });
 
+// sub
+router.post("/videos/fallow", verifyToken ,async (req, res)=> {
+    //console.log(req.username) ;
+    console.log(tokenowner.username) ;
+    const  uploadvideo = new Video({ username: tokenowner.username,...req.body      });
+    try{
+     
+
+       await uploadvideo.save().then((u)=>{
+            console.log("video upload success") ;
+            res.status(200).json(u)});
+               
+    } catch (error) {
+        throw(error)
+    }   
+
+});
+
+
 module.exports = router;
