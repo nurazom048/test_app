@@ -3,7 +3,9 @@ router = express.Router();
 const Video =require("../models/videos_model");
 const user =require("../models/account_model");
 //const jwt = require ("jsonwebtoken");
-const verifyToken = require("../verifyToken"); require("mongoose");
+const verifyToken = require("../verifyToken"); 
+const { getVideos } = require("../controllers/videos_controller");
+require("../controllers/videos_controller");
 
 
 
@@ -55,29 +57,7 @@ router.post("/videos/fallow", verifyToken ,async (req, res)=> {
 });
 
 // all flloing user video
-router.get("/videos/fallowingvideo", verifyToken ,async (req, res)=> {
-  
- 
-  
-    try{
-  const   finduser = await user.findOne({ username: tokenowner.username });
-        flloingusers =  finduser.flowing;
-
-   const allvideos = await  Promise.all(
-                 flloingusers.map( async (username)=> {
-                return await Video.find({username : username})})
-       );
-    res.status(200).json(allvideos.flat().sort((a, b) => b.createdAt - a.createdAt));      
-   
-
-
-
-
-} catch (error) {
-        throw(error)
-    }   
-
-});
+router.get("/videos/fallowingvideo", verifyToken ,getVideos );
 
 
 module.exports = router;
