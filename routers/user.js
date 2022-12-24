@@ -20,19 +20,20 @@ try {
     res.status(401).json({message: "you cannot fllow yourself"});
   
   
-    }else{    
-    if( isfllowing.length !== 0){
-        res.status(401).json({message: "you are already fllow"});
-   } else {
+    }else if (isfllowing.length !== 0){
+
+    res.status(401).json({message: "you are already fllow"});
+   } else 
+   {
     const others = await user.findOne({ username: req.params.username })
     const loginuser = await user.findOne({ username: tokenowner.username })     // user account      
     await loginuser.updateOne({$push: {flowing: req.params.username  }},{new : true});
-      // others account     
+
     await others.updateOne({$push: {follower: tokenowner.username  }},{new : true});
      res.status(200).json({message: "fallowing success"});
      console.log( others);
      console.log( loginuser);
-     }}
+     }
   
 } catch (error) {
   res.status(401).json({message: "something went wrong"});
@@ -52,10 +53,8 @@ try {
     res.status(401).json({message: "you cannot unfllow yourself"});
   
   
-    }else{   
-      
-      
-    if( isfllowing.length == 1){
+    }else if( isfllowing.length == 1 ){
+
       const others = await user.findOne({ username: req.params.username })
       const loginuser = await user.findOne({ username: tokenowner.username })     // user account      
       await loginuser.updateOne({$pull: {flowing: req.params.username  }},{new : true});
@@ -69,7 +68,7 @@ try {
       
    } else {
     res.status(401).json({message: "you are already unfllow"});
-     }}
+     }
   
 } catch (error) {
   res.status(401).json({message: "something went wrong"});
