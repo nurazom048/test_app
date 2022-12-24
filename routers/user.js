@@ -9,27 +9,35 @@ const user =require("../models/account_model");
 
 // ****************  fllow user  ****************//
 router.put("/fllow/:username" , verifyToken, async (req, res, next)=>{
- try {
-      
-      if( req.params.username !== tokenowner.username){
- const u = await user.findOne({ username: req.params.username })
- const you = await user.findOne({ username: tokenowner.username })
-    // user account      
-  await you.updateOne({$push: {flowing: req.params.username  }},{new : true});
-    // others account     
-  await u.updateOne({$push: {follower: tokenowner.username  }},{new : true});
-  res.status(200).json({message: "fallowing success"});
+ 
+  const isfllowing = await user.find({ username: tokenowner.username, flowing :  req.params.username})
+  console.log( isfllowing.length);
+
+
+try {
   
-console.log(u);
-console.log(you);
-
+  if( req.params.username ==  tokenowner.username  ){
+    res.status(401).json({message: "you cannot fllow yourself"});
+  
+  
+    }else{    
+    if( isfllowing.length !== 0){
+        res.status(401).json({message: "you are already fllow"});
    } else {
-      res.status(401).json({message: "you cannot fllow yourself"});
+    const others = await user.findOne({ username: req.params.username })
+    const loginuser = await user.findOne({ username: tokenowner.username })     // user account      
+    await loginuser.updateOne({$push: {flowing: req.params.username  }},{new : true});
+      // others account     
+    await others.updateOne({$push: {follower: tokenowner.username  }},{new : true});
+     res.status(200).json({message: "fallowing success"});
+     console.log( others);
+     console.log( loginuser);
+     }}
+  
+} catch (error) {
+  res.status(401).json({message: "something went wrong"});
 }
-
-        
-     }catch (err) {throw(err)}
- } );
+});
 
   
  module.exports = router;

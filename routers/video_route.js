@@ -9,18 +9,8 @@ require("../controllers/videos_controller");
 
 
 
+//  upload videos
 
-// //  login
-// router.get("/videos", verifyToken,async (req, res)=> { 
-//   //  console.log(req.username.username)   
-//     res.json({
-//         req: req.username,
-//         massage :"update"});
-
-// });
-
-
-//  login
 router.post("/videos/upload", verifyToken ,async (req, res)=> {
     //console.log(req.username) ;
     console.log(tokenowner.username) ;

@@ -4,6 +4,7 @@ const app = express();
 const auth_route = require("./routers/auth_route");
 const video_route = require("./routers/video_route");
 const user_route = require("./routers/user");
+const post_route = require("./routers/post_route");
 const cookieParser = require('cookie-parser')
 
 
@@ -22,7 +23,7 @@ app.use(express.json());
 app.use("/auth",auth_route);  // auth route
 app.use("/",video_route); 
 app.use("/",user_route); // user route
-
+app.use("/",post_route); 
 
 
 
