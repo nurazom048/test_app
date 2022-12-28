@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const app = express();
 const auth_route = require("./routers/auth_route");
 const video_route = require("./routers/video_route");
-const user_route = require("./routers/user");
+const user_route = require("./routers/account");
 const post_route = require("./routers/post_route");
 const cookieParser = require('cookie-parser')
 

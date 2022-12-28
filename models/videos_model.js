@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const VideoSchema = new mongoose.Schema(
   {
 
-    // userId:{
-    //     type: String,
-    //     required: true,
+     userId:{
+         type: String,
+        
 
-    // },
+     },
     title: {
       type: String,
       required: true,
@@ -44,6 +44,18 @@ const VideoSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    comment: {
+      type: [String],
+      default: [],
+    },
+    notes: {
+      type: [String],
+      default: [],
+    },
+    username:{
+      type: String,
+      required: true,
+    }
   },
   { timestamps: true }
 );

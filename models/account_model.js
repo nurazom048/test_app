@@ -33,6 +33,14 @@ const mongoose = require('mongoose');
     flowing: {
       unique: true,
       type: [String],
+    },
+    subscribers: {
+      unique: true,
+      type: [String],
+    },
+    subscribed: {
+      unique: true,
+      type: [String],
     }
   
   });
