@@ -5,6 +5,7 @@ const auth_route = require("./routers/auth_route");
 const video_route = require("./routers/video_route");
 const user_route = require("./routers/account");
 const post_route = require("./routers/post_route");
+const comment_route = require("./routers/comment_routes");
 const cookieParser = require('cookie-parser')
 
 
@@ -24,6 +25,7 @@ app.use("/auth",auth_route);  // auth route
 app.use("/",video_route); 
 app.use("/",user_route); // user route
 app.use("/",post_route); 
+app.use("/",comment_route); 
 
 
 

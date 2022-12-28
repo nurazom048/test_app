@@ -17,7 +17,7 @@ exports.add_comments =  async(req, res) => {
   
 try {
     const  comments = new comment({
-        id:req.params.id,
+        contentid:req.params.id,
         username:tokenowner.username,
         comment: req.body.comment
         });
@@ -51,14 +51,12 @@ if (comment_for_videos) {
     console.log("comment id added to post");
 
     
-}else if(!comment_for_post & !comment_for_videos){
+}else{
 
 
     res.status(400).json({error: "Please try again"});
 
-}else{
-}
-    
+} 
 } catch (error) {
     throw(error);
 
