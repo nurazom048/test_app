@@ -8,6 +8,9 @@ const  {fallowing_users_video,uploadVideo, editVideo,delete_video} =  require(".
 router.post("/videos/upload", verifyToken ,uploadVideo);//  upload videos
 router.post("/videos/edit/:vid", verifyToken ,editVideo);//  edit videos
 router.delete("/videos/delete/:vid", verifyToken ,delete_video);//  delete videos
+
+
+// get all videos of fallowing user
 router.get("/videos/fallowing_users_video", verifyToken ,fallowing_users_video );// all fallowing user video
 
    

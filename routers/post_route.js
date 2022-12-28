@@ -4,34 +4,15 @@ const post =require("../models/post_models");
 const user =require("../models/account_model");
 //const jwt = require ("jsonwebtoken");
 const verifyToken = require("../verifyToken"); 
-const { getVideos } = require("../controllers/videos_controller");
+const { upload_post ,edit_post,delete_post} = require("../controllers/post_controller");
 require("../controllers/videos_controller");
 
 
 
+router.post("/post/upload", verifyToken,upload_post);/// upload post 
+router.post("/post/edit/:pid", verifyToken,edit_post);// edit post 
+router.delete("/post/delete/:pid", verifyToken,delete_post);/// delete post 
 
 
-
-
-
-
-
-/// upload post 
-router.post("/post/upload", verifyToken ,async (req, res)=> {
-
-    console.log(tokenowner.username) ;
-    const  uploadpost = new post({ username: tokenowner.username,...req.body      });
-    try{
-     
-
-       await uploadpost.save().then((u)=>{
-            console.log("post upload success") ;
-            res.status(200).json(u)});
-               
-    } catch (error) {
-        throw(error)
-    }   
-
-});
 
 module.exports = router;
