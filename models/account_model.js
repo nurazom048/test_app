@@ -30,6 +30,16 @@ const mongoose = require('mongoose');
       default:"",
     
      },
+     accounttype: {
+      type: String,
+      require: true,
+      enum:["profile", "institute"],
+
+      default:"profile",
+
+
+     },
+
      follower: {
       unique: true,
       type: [String],
