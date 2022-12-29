@@ -19,7 +19,7 @@ router.get("/update",async (req, res)=> {
  
  
  
-router.post("/signup",authcontroller.user_signup),  //!***** signup account   
+router.post("/account/create",authcontroller.create_a_account),  //!***** signup account   
 router.post("/login",authcontroller.user_login), //!***** login account
 router.put("/update/:username" , verifyToken, authcontroller.user_update),// ***  update user  *******//
 router.put("/delete/:username" , verifyToken, authcontroller.user_delete),// ***  delete user  *******//

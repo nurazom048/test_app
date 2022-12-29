@@ -9,6 +9,10 @@ const mongoose = require('mongoose');
     type: String,
     require: true,
     unique: true,
+    lowercase: true,
+    trim: true,
+    
+
      },
      password:{
       type: String,

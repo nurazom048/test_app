@@ -33,26 +33,49 @@ exports.user_login = async (req, res)=> {
    
 
 
-//***************** SIGNUP ********************** */
+//***************** create_a_account  ********************** */
 
 
-exports. user_signup = async (req, res)=> {
-    console.log(req.body);
-/// later add hash
+exports. create_a_account = async (req, res)=> {
+
+try {
     const account = new user({
-      name:req.body.name,
-      username:req.body.username,
-      password:req.body.password,
-      mainpic:req.body.mainpic,
-      coverpic:req.body.coverpic,
-});
-account.save().then(()=>{
-    res.status(200).send(account);
- }).catch((err)=>{
-    res.send(err);
- });
+        name:req.body.name,
+        username:req.body.username,
+        password:req.body.password,
+        mainpic:req.body.mainpic,
+        coverpic:req.body.coverpic,
+     });
+
+
+
+is_user_exist = await user.findOne({ username: req.body.username });
+
+/// condition
+if (is_user_exist) {
+
+    res.status(401).json({message: "user already exists"});
+} else {
+ /// later add hash
+const account = new user({
+        name:req.body.name,
+        username:req.body.username,
+        password:req.body.password,
+        mainpic:req.body.mainpic,
+        coverpic:req.body.coverpic,
+  });
+  account.save().then((u)=>{
+      res.status(200).send(u);
+      console.log(u);
+   }).catch((err)=>{
+      res.send(err);
+      console.log(err);
+   });
+}   
+} catch (error) {
    
- }
+    
+} }
 
  //***************** update user ********************** */
 
