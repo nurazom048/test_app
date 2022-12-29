@@ -5,8 +5,6 @@ const VideoSchema = new mongoose.Schema(
 
      userId:{
          type: String,
-        
-
      },
     title: {
       type: String,
@@ -44,10 +42,12 @@ const VideoSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
-    comment: {
-      type: [String],
-      default: [],
-    },
+    comment: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
+    
+      
+    }],
     notes: {
       type: [String],
       default: [],
