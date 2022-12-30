@@ -6,6 +6,8 @@ const video_route = require("./routers/video_route");
 const user_route = require("./routers/account");
 const post_route = require("./routers/post_route");
 const comment_route = require("./routers/comment_routes");
+const course_route = require("./routers/course_route");
+
 const cookieParser = require('cookie-parser')
 
 
@@ -17,7 +19,7 @@ mongoose.connect("mongodb+srv://azomazom:rr1234@cluster0.febfuth.mongodb.net/?re
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.json());
+
 
 
  //*****   routes  ******/
@@ -26,6 +28,7 @@ app.use("/",video_route);
 app.use("/",user_route); // user route
 app.use("/",post_route); 
 app.use("/",comment_route); 
+app.use("/",course_route); 
 
 
 
