@@ -6,24 +6,23 @@ const Video =require("../models/videos_model");
 
 
 
-// ......... course_create...........///
-
+// ......... course create - edit- delete...........///
 
 // Create course
 exports.course_create = async (req, res) => {
     console.log(req.body);
-    const { title,about, } = req.body;
-    const creator = await User.findOne({ username : tokenowner.username});
+    const { title, about } = req.body;
+    const loginuser = await User.findOne({ username: req.user.username });
 
     // Validate request body
-    if (!title ||!about) return res.status(400).send({ error: 'Missing required fields' });
+    if (!title || !about) return res.status(400).send({ error: 'Missing required fields' });
     
   
     // Create new course
     const course = new Course({
-      title:title,
+      title: title,
       about: about,
-      creator_id: creator._id, // Use req.user.id to get the user's ID
+      creator_id: loginuser._id, // Use req.user.id to get the user's ID
     });
   
     try {
@@ -32,18 +31,18 @@ exports.course_create = async (req, res) => {
       return res.status(200).send({ course: savedCourse });
 
 
-      
+
     } catch (error) {
       return res.status(400).send({ error });
     }
-  };
+ };
 
 
 // Edit course
 exports.course_edit = async (req, res) => {
     const { id } = req.params;
     const { title, about } = req.body;
-    const loginuser = await User.findOne({ username : tokenowner.username});
+    const loginuser = await User.findOne({ username : req.user.username});
 
 
     
@@ -74,7 +73,6 @@ exports.course_edit = async (req, res) => {
 
 
 
-
 // Delete course
 exports.course_delete = async (req, res) => {
     console.log(req.params);
@@ -85,7 +83,7 @@ exports.course_delete = async (req, res) => {
       if (!course) return res.status(404).send({ error: 'Course not found' });
       
   
-      course.remove((error) => {
+        course.remove((error) => {
         if (error)return res.status(400).send({ error })
         return res.status(200).send({ message: 'Course deleted successfully' });
       });
@@ -94,12 +92,13 @@ exports.course_delete = async (req, res) => {
   
 
 
+// *************** chapter => create - edit- delete ***************************///
 
-// Create a new chapter in a course
+// Create a new chapter 
 exports.chapter_create = async(req, res) => {
     const { id } = req.params;
     const { title, about } = req.body;
-    const loginuser = await User.findOne({ username : tokenowner.username});
+    const loginuser = await User.findOne({ username : req.user.username});
 
    
 try {
@@ -141,7 +140,7 @@ try {
 // delete chapter in a course
 exports.chapter_delete = async (req, res) => {
     const { id, chaptername } = req.params;
-    const loginuser = await User.findOne({ username: tokenowner.username });
+    const loginuser = await User.findOne({ username: req.user.username });
   
     try {
      
@@ -180,7 +179,7 @@ exports.chapter_delete = async (req, res) => {
 exports.chapter_edit = async (req, res) => {
   const { id,chaptername } = req.params;
   const { title, about } = req.body;
-  const loginuser = await User.findOne({ username: tokenowner.username });
+  const loginuser = await User.findOne({ username: req.user.username });
   // Find course by ID
   const course = await Course.findById(id);
   if (!course) return res.status(404).send({ error: 'Course not found' });
@@ -202,84 +201,74 @@ exports.chapter_edit = async (req, res) => {
     // Save updated course to the database
     const savedCourse = await course.save();
     return res.status(200).send({ course: savedCourse });
+
+    
   } catch (error) {
     return res.status(400).send({ error });
   }
 };
 
 
-  // Add a video to a chapter in a course 
+// *************** video inside chapter => create - edit- delete ***************************///
+
+
+// Add a video to a chapter in a course 
 
 exports.chapter_add_video = async (req, res) => {
     console.log(req.params);
-  
     const { courseId, chapterName, videoId } = req.params;
-  
-    Course.findById(courseId, (error, course) => {
-      if (error) {
-        return res.status(400).send({ error });
-      }
-  
-      if (!course) {
-        return res.status(404).send({ error: 'Course not found' });
-      }
+
+    try {
+    
+      const course = await Course.findById(courseId);
+      if (!course) return res.status(404).send({ error: 'Course not found' });
   
       const chapter = course.chapters.find((chapter) => chapter.title === chapterName);
-      if (!chapter) {
-        return res.status(404).send({ error: 'Chapter not found' });
-      }
-  
-      if (chapter.videos.includes(videoId)) {
-        return res.status(400).send({ error: 'Video already added to chapter' });
-      }
+      if (!chapter) return res.status(404).send({ error: 'Chapter not found' });  // If the chapter is not found
+      // If the video is already in the chapter
+      if (chapter.videos.includes(videoId)) return res.status(400).send({ error: 'Video already added to chapter' });
   
       chapter.videos.push(videoId);
-      course.save((error) => {
-        if (error) {
-          return res.status(400).send({ error });
-        }
   
-        return res.status(200).send({ message: 'Video added to chapter successfully' });
-      });
-    });
+      await course.save();
+      return res.status(200).send({ message: 'Video added to chapter successfully' });
+   
+   
+   
+   
+    } catch (error) {
+      return res.status(400).send({ error });
+    }
   };
   
 
- 
-  // Remove a video from a chapter in a course
-  exports.chapter_remove_video = async(req, res) => {
-  
 
+
+
+  // Delete a video from a chapter in a course
+exports.chapter_remove_video = async (req, res) => {
     const { courseId, chapterName, videoId } = req.params;
   
-    Course.findById(courseId, (error, course) => {
-      if (error) {
-        return res.status(400).send({ error });
-      }
+    try {
+    
+      const course = await Course.findById(courseId);
+      if (!course) return res.status(404).send({ error: 'Course not found' });
   
-      if (!course) {
-        return res.status(404).send({ error: 'Course not found' });
-      }
-  
+       // If the chapter is not found,
       const chapter = course.chapters.find((chapter) => chapter.title === chapterName);
-      if (!chapter) {
-        return res.status(404).send({ error: 'Chapter not found' });
-      }
+      if (!chapter) return res.status(404).send({ error: 'Chapter not found' });
   
+      // Find the index of the video in the chapter
       const videoIndex = chapter.videos.indexOf(videoId);
-      if (videoIndex === -1) {
-        return res.status(404).send({ error: 'Video not found' });
-      }
+      if (videoIndex === -1) return res.status(404).send({ error: 'Video not found' });
   
+      // Remove the video from the chapter
       chapter.videos.splice(videoIndex, 1);
-      course.save((error) => {
-        if (error) {
-          return res.status(400).send({ error });
-        }
   
-        return res.status(200).send({ message: 'Video removed to chapter successfully' });
-
-      });
-    });
+      // Save the updates to the course in the database
+      await course.save();
+      return res.status(200).send({ message: 'Video removed to chapter successfully' });
+   
+   
+    } catch (error) {return res.status(400).send({ error });}
   };
-  

@@ -7,8 +7,9 @@ require("mongoose");
 /// upload post
 exports.upload_post = async(req, res) => {
 
-    console.log(tokenowner.username) ;
-    const  uploadpost = new post({ username: tokenowner.username,...req.body  });
+    console.log(req.user.username);
+ 
+    const  uploadpost = new post({ username: req.user.username,...req.body  });
 try{
     await uploadpost.save().then((u)=>{
     console.log("post upload success") ;
@@ -53,7 +54,7 @@ if (find_post) {
 //
 try {
 
-   deleted_post = await post.findOneAndDelete({_id :req.params.pid,username:tokenowner.username});
+   deleted_post = await post.findOneAndDelete({_id :req.params.pid,username:req.user.username});
     if (deleted_post) {
         console.log("post deleted");
         res.status(200).json({massage : "deleted"});
