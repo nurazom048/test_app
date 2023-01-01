@@ -36,11 +36,11 @@ const VideoSchema = new mongoose.Schema(
     },
     likes: {
       type: [String],
-      default: [],
+      default: ["1"],
     },
     dislikes: {
       type: [String],
-      default: [],
+      default: ["1"],
     },
     comment: [{
       type: mongoose.Schema.Types.ObjectId,
