@@ -9,8 +9,9 @@ require("../controllers/videos_controller");
 router.post("/post/upload", verifyToken,upload_post);/// upload post 
 router.post("/post/edit/:pid", verifyToken,edit_post);// edit post 
 router.delete("/post/delete/:pid", verifyToken,delete_post);/// delete post 
-router.post("/post/like/:Id", verifyToken,like);/// like post 
-router.post("/post/unlike/:Id", verifyToken,unlike);/// unlike post 
+
+
+
 
 
 

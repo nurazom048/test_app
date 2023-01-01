@@ -7,6 +7,7 @@ const user_route = require("./routers/account");
 const post_route = require("./routers/post_route");
 const comment_route = require("./routers/comment_routes");
 const course_route = require("./routers/course_route");
+const like_unlike = require("./routers/like_unlike_route");
 
 const cookieParser = require('cookie-parser')
 
@@ -29,6 +30,7 @@ app.use("/",user_route); // user route
 app.use("/",post_route); 
 app.use("/",comment_route); 
 app.use("/",course_route); 
+app.use("/",like_unlike); 
 
 
 
