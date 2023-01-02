@@ -2,9 +2,6 @@ const express = require("express");
 router = express.Router();
 const Video =require("../models/videos_model");
 const Account =require("../models/account_model");
-
-//const jwt = require ("jsonwebtoken");
-const verifyToken = require("../verifyToken");const { findOneAndUpdate, findById, findOne } = require("../models/post_models");
  require("mongoose");
 
 // upload video 
