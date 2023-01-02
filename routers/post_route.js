@@ -7,8 +7,8 @@ require("../controllers/videos_controller");
 
 
 router.post("/post/upload", verifyToken,upload_post);/// upload post 
-router.post("/post/edit/:pid", verifyToken,edit_post);// edit post 
-router.delete("/post/delete/:pid", verifyToken,delete_post);/// delete post 
+router.post("/post/edit/:_id", verifyToken,edit_post);// edit post 
+router.delete("/post/delete/:_id", verifyToken,delete_post);/// delete post 
 
 
 

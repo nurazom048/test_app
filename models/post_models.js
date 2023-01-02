@@ -4,8 +4,9 @@ const PostSchema = new mongoose.Schema(
   {
 
     userId:{
-      type: String,
-     
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Account',
+    required: true
 
   },
     username: {
@@ -31,9 +32,10 @@ const PostSchema = new mongoose.Schema(
       type: [String],
       default: ["1"],
     },
-    comment: {
-      type: [String],
-      default: [],
+    comments: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
+     
     },
   },
   { timestamps: true }

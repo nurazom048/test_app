@@ -1,60 +1,60 @@
 const express = require("express");
 router = express.Router();
 const post =require("../models/post_models");
+const Post =require("../models/post_models");
 const Video =require("../models/videos_model");
-const comment =require("../models/comment_model");
+const Comment =require("../models/comment_model");
 
 require("mongoose");
 
 
 
 //........... add comment.................//
-exports.add_comments =  async(req, res) => {
-     
-   comment_for_videos =  await  Video.findOne({ _id:req.params.id });// to check video is exist or not
-   comment_for_post   =  await   post.findOne( {_id: req.params.id});// to check post  is exist or not
+
+// Add a comment to either a video or a post
+exports.add_comments = async (req, res) => {
+    const { id } = req.params;
+    const commentForVideos = await Video.findOne({ _id: id });
+    const commentForPost = await Post.findOne({ _id: id });
+  
+    try {
+      // Create a new comment
+      const comments = new Comment({
+        contentid: id,
+        username: req.user.username,
+        comment: req.body.comment,
+      });
+  
+      // If the comment is for a video, add the comment and update the video
+      if (commentForVideos) {
+        const newComment = await comments.save();
+        const updatedVideo = await Video.findOneAndUpdate(
+          { _id: id },
+          { $push: { comments: newComment._id } },
+          { new: true }
+        );
+        return res.status(200).json({ updatedVideo, newComment});
+      }
+  
+      // If the comment is for a post, add the comment and update the post
+      if (commentForPost) {
+        const newComment = await comments.save();
+        const updatedPost = await Post.findOneAndUpdate(
+          { _id: id },
+          { $push: { comments: newComment._id } },
+          { new: true }
+        );
+        return res.status(200).json({ updatedPost, newComment });
+      }
+  
+      // Return an error if the comment is not for a valid content
+      return res.status(400).json({ error: "Please try again" });
+    } catch (error) {
+      throw error;
+    }
+  };
   
   
-try {
-    const  comments = new comment({
-        contentid:req.params.id,
-        username:tokenowner.username,
-        comment: req.body.comment
-        });
-   
-    if (comment_for_videos) {
-   
-    //..... add _comments
-        new_comment =   await comments.save()
-        console.log(new_comment) ;
-        
-    //..... add _comments id to videos comments[array]
-        updated_comment = await Video.findOneAndUpdate({ _id :req.params.id},{ $push : {comment: new_comment._id}},{new:true});
-        res.status(200).json({updated_comment } );
-        console.log("comment id added to videos");
-
-    
-    } else if (comment_for_post){      //...... if this comment is for post
-
- 
-        new_comment =   await comments.save()
-        console.log(new_comment) ;
-    
-
-        //..... add _comments id to post comments[array]
-        updated_comment = await post.findOneAndUpdate({ _id :req.params.id},{ $push : {comment: new_comment._id}},{new:true});
-        res.status(200).json({updated_comment,new_comment } );
-        console.log("comment id added to post");
-
-    
-    }else{
-
-
-    res.status(400).json({error: "Please try again"});
-
-     } 
-} catch (error) {throw(error);}}
-
 // .............. edit_comment................//
 exports.edit_comment = async (req, res) => {
 
@@ -64,9 +64,6 @@ exports.edit_comment = async (req, res) => {
 
 
  try {
-
-
-
 
 
     // if comment exists and match with user

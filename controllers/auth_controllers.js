@@ -17,7 +17,7 @@ exports.user_login = async (req, res)=> {
     if (!user){res.status(401).json({message: "user not exists"})}
             else if (req.body.password === u.password )
              {
-               const token = jwt.sign({ username: u.username}, "ahjkdfhkjsgh");
+               const token = jwt.sign({ username: u.username,_id: u._id}, "secret");
                    // res.cookie("access_token", token, {
                    // httpOnly: true,
                    //  });
