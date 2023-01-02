@@ -9,10 +9,8 @@ const {fllow_user_account, unfllow_user_account} = require("../controllers/accou
 
 
 
-// ****************  fllow user  ****************//
+// ****************  fllow and unfllow  ****************//
 router.put("/fllow/:username" , verifyToken, fllow_user_account);
-
-// ****************  unfllow user  ****************//
 router.put("/unfllow/:username" , verifyToken,unfllow_user_account );
   
 

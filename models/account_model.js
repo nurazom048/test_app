@@ -34,7 +34,6 @@ const mongoose = require('mongoose');
       type: String,
       require: true,
       enum:["profile", "institute"],
-
       default:"profile",
 
 

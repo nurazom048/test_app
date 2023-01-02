@@ -1,72 +1,48 @@
 const express = require("express");
-const { default: mongoose } = require("mongoose");
 router = express.Router();
-const user =require("../models/account_model");
-
-const jwt = require("jsonwebtoken");
-
-// ......... fllow user account.........
-exports.fllow_user_account = async(req, res, next) => {
-    const isfllowing = await user.find({ username: tokenowner.username, flowing :  req.params.username})
-  console.log( isfllowing.length);
+const Account =require("../models/account_model");
 
 
-try {
-  
-  if( req.params.username ==  tokenowner.username  ){
-    res.status(401).json({message: "you cannot fllow yourself"});
-  
-  
-    }else if (isfllowing.length !== 0){
 
-    res.status(401).json({message: "you are already fllow"});
-   } else 
-   {
-    const others = await user.findOne({ username: req.params.username })
-    const loginuser = await user.findOne({ username: tokenowner.username })     // user account      
-    await loginuser.updateOne({$push: {flowing: req.params.username  }},{new : true});
+// ......... fllow  account.........
+exports.fllow_user_account = async(req, res) => {
+  const {username}= req.params;
+  const other = await Account.findOne({ username:username});
+  const isfllowing = await Account.findOne({ username: req.user.username, flowing : username});
 
-    await others.updateOne({$push: {follower: tokenowner.username  }},{new : true});
-     res.status(200).json({message: "fallowing success"});
-     console.log( others);
-     console.log( loginuser);
-     }
-  
-} catch (error) {
-  res.status(401).json({message: "something went wrong"});
-}
+
+  try {
+    if(!other)return res.status(401).json({massage: "other account not found"});
+    if(username ==req.user.username) return   res.status(401).json({message: "you cannot fllow yourself"});
+    if(isfllowing) return  res.status(401).json({message: "you are already fllow"});
+
+    const others = await Account.findOneAndUpdate({ username: username }, {$push: {follower: req.user.username}}, {new : true});
+    const loginuser = await Account.findOneAndUpdate({ username: req.user.username }, {$push: {flowing: username}}, {new : true});
+    
+    res.status(200).json({message: "fallowing success", loginuser, others});
+  } catch (error) {
+    res.status(401).json({message: "something went wrong"});
+  }
 }
 
-
-/// ........... unfllow user account .......//
+// ........... unfllow  account .......//
 exports.unfllow_user_account = async (req, res) => {
+  const { username } = req.params;
+  const isOther = await Account.findOne({ username });
+  const isFollowing = await Account.findOne({ username: req.user.username, flowing: username });
 
+  try {
+    
+    if (!isOther) return res.status(401).json({ message: "User account not found" })
+    if (username === req.user.username) return res.status(401).json({ message: "You cannot unfollow yourself" });
+    if (!isFollowing) return res.status(401).json({ message: "You are already not following this user" });
 
+    const updatedOthers = await Account.findOneAndUpdate({ username }, { $pull: { follower: req.user.username } }, { new: true });
+    const updatedLoginUser = await Account.findOneAndUpdate({ username: req.user.username }, { $pull: { flowing: username } }, { new: true });
+    res.status(200).json({ message: "Successfully unfollowed user" ,updatedLoginUser,updatedOthers});
  
- const isfllowing = await user.find({ username: tokenowner.username, flowing :  req.params.username})
- console.log( isfllowing);
-try {
-        
-    if( req.params.username ==  tokenowner.username  ){
-        res.status(401).json({message: "you cannot unfllow yourself"});
-        }else if( isfllowing.length == 1 ){
-      
-        const others = await user.findOne({ username: req.params.username })
-        const loginuser = await user.findOne({ username: tokenowner.username })     // user account      
-        await loginuser.updateOne({$pull: {flowing: req.params.username  }},{new : true});
-       
-        await others.updateOne({$pull: {follower: tokenowner.username  }},{new : true});
-            res.status(200).json({message: "un fallowing success"});
-            console.log( others);
-            console.log( loginuser);
-      
-      
-            
-        } else {
-          res.status(401).json({message: "you are already unfllow"});
-    }
-        
-    } catch (error) {
-        res.status(401).json({message: "something went wrong"});
-      }}
-      
+ 
+  } catch (error) {
+    res.status(401).json({ message: "Something went wrong" });
+  }
+};
