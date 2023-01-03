@@ -4,6 +4,7 @@ const post =require("../models/post_models");
 const Post =require("../models/post_models");
 const Video =require("../models/videos_model");
 const Comment =require("../models/comment_model");
+const Account =require("../models/account_model");
 
 require("mongoose");
 
@@ -118,3 +119,29 @@ try {
 
 
 
+// reply Comment model
+
+
+exports.addReply = async (req, res) => {
+
+  const {id}= req.params;
+  const { reply } = req.body;
+  const comment = await Comment.findById(id);
+ 
+
+  try {
+  
+  
+    // If the comment does not exist, return an error message
+    if (!comment) return res.status(404).json({ message: "Comment does not exist" });
+    
+    // Push the reply to the comment's replies array and save 
+    comment.replies.push({ user_id : req.user._id, username:req.user.username, reply });
+    const updatedComment = await comment.save();
+    return res.status(200).json(updatedComment);
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error adding reply" });
+  }
+};
