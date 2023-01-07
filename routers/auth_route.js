@@ -9,13 +9,12 @@ router.get("/signup", (req, res)=> {
     res.send("This is sighup in page");
     }),
     //  login
-router.get("/update",async (req, res)=> {    
-res.send("update");});
 
-router.post("/account/create",authcontroller.create_a_account),  //!***** signup account   
-router.post("/login",authcontroller.user_login), //!***** login account
-router.put("/update/:username" , verifyToken, authcontroller.user_update),// ***  update user  *******//
-router.put("/delete/:username" , verifyToken, authcontroller.user_delete),// ***  delete user  *******//
+
+router.post("/account/create",authcontroller.create_account),  //!***** signup account   
+router.post("/login",authcontroller.login), //!***** login account
+router.put("/update/:username" , verifyToken, authcontroller.updateAccount),// ***  update user  *******//
+router.put("/delete/:username" , verifyToken, authcontroller.deleteAccount),// ***  delete user  *******//
 
  module.exports = router;
 
