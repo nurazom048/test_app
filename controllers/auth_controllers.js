@@ -1,114 +1,101 @@
 const express = require("express");
-const { default: mongoose } = require("mongoose");
 router = express.Router();
-const user =require("../models/account_model");
-
+const Account =require("../models/account_model");
 const jwt = require("jsonwebtoken");
 
 
 //***************** login ********************** */
-exports.user_login = async (req, res)=> {
-    /// console.log(req.body.password);
- try {
-        await user.findOne({ username: req.body.username }).then(u=>{
+exports.login = async (req, res)=> {
  
-      
-            
-    if (!user){res.status(401).json({message: "user not exists"})}
-            else if (req.body.password === u.password )
-             {
-               const token = jwt.sign({ username: u.username, _id: u._id}, "secret");
-                   // res.cookie("access_token", token, {
+    const { username, password } = req.body;
+    const account = await Account.findOne({ username });
+    console.log(account.password==password);
+
+ try {
+    if (!account) return res.status(401).json({ message: "account does not exist" });
+    // If the password does not match, return an error message
+    if (password !== account.password) return res.status(401).json({ message: "Incorrect password" });
+
+    // If the username and password match, sign and return a JSON web token 
+    const token = jwt.sign({ username: account.username, _id: account._id }, "secret");
+    // res.cookie("access_token", token, {
                    // httpOnly: true,
                    //  });
-                   res.status(200).json({toke:  token})
-                   console.log("login successfully");
-                }else{ res.status(401).json({message: "Auth not match"})}; });
-      
+   
+    res.status(200).json({ massage: "Account Login Sucsessfull", token });
 
 
-    }catch (err) {throw(err)}
+    }catch (err) {
+        
+        res.status(500).json({ message: "Error logging in",err });
+    }
         
 };
    
 
 
-//***************** create_a_account  ********************** */
+//***************** create_account  ********************** */
 
 
-exports. create_a_account = async (req, res)=> {
-
-try {
-
-
-
-is_user_exist = await user.findOne({ username: req.body.username });
-
-/// condition
-if (is_user_exist) {
-
-    res.status(401).json({message: "user already exists"});
-} else {
- /// later add hash
-const account = new user({
-        name:req.body.name,
-        username:req.body.username,
-        password:req.body.password,
-        mainpic:req.body.mainpic,
-        coverpic:req.body.coverpic,
-        accounttype:req.body.accounttype,
-
-  });
-  account.save().then((u)=>{
-      res.status(200).send(u);
-      console.log(u);
-   }).catch((err)=>{
-      res.send(err);
-      console.log(err);
-   });
-}   
-} catch (error) {
-   
-    
-} }
-
- //***************** update user ********************** */
-
- exports. user_update = async (req, res)=> {
-
-    try {
-
-     if( req.params.username ===  req.username.username){
-        const   updateduser = await user.findOneAndUpdate(req.username.username,
-            { name:req.body.name,
-                password:req.body.password,
-                mainpic:req.body.mainpic,
-                coverpic :req.body.coverpic
-             },{new : true})
-            console.log(updateduser)
-            res.json([updateduser,{ massage : "your Account is updated "}])
-
-            }else{ res.json({massage:"You can Only update your account"})}
- 
-       
-    }catch (err) {throw(err)}
-} 
-
-
- //***************** delete user ********************** */
- exports. user_delete = async (req, res)=> {
-    
-    console.log(req.body.name);
-    try {
-       
-      if( req.params.username ===  req.username.username){
-       
-            await user.findOneAndDelete(req.username.username,)
-            res.json([{ massage : "your Account is delete "}])
- 
-        }else
-            {res.json({massage:"You can  delete your Only account"})}
+exports.create_account = async (req, res) => {
+    console.log(req.body);
+    const { name, username, password, mainpic, coverpic, accounttype } = req.body;
   
+    try {
+
+      const isAccountExist = await Account.findOne({ username });
+      if (isAccountExist) return res.status(401).json({ message: "Account already exists" });
+  
+      // Create a new account
+      const account = new Account({ name, username, password, mainpic, coverpic, accounttype });
+      const created = await account.save();
+  
+      // Send response
+      res.status(200).json({massage: "Account created Sucsessfull", created});
+   
+   
+    } catch (error) {
+      res.send(error);
+    }
+  }
+  
+
+ //***************** update Account ********************** */
+
+
+exports.updateAccount = async (req, res) => {
+    const { name, password, mainpic, coverpic } = req.body;
+    const { username } = req.params;
+   
+    try {
+      if (username !== req.user.username)return res.status(401).json({ message: "You can only update your own account" });
+      
+      // ... updte an send response
+      const updatedAccount = await Account.findOneAndUpdate({ username }, { name, password, mainpic, coverpic }, { new: true });
+      res.status(200).json([updatedAccount, { message: "Your account has been updated" }]);
+   
+   
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+
+ //***************** delete Account ********************** */
+ exports. deleteAccount = async (req, res)=> {
+    const { username } = req.params;
+    const isAccountExist = await Account.findOne({ username });
+    console.log(req.user,username);
+    
+
+    
+    try {
+
+    if (!isAccountExist) return res.status(401).json({ message: "Account is not exists" });
+    if( username!==req.user.username) return res.status(401).json({ message: "You can only Delete your own account" });
+       
+        await Account.findOneAndDelete(req.user.username);
+        res.json([{ massage : "your Account is deleted "}])
         
     }catch (err) {throw(err)}
  } 
