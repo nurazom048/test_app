@@ -17,7 +17,7 @@ exports.user_login = async (req, res)=> {
     if (!user){res.status(401).json({message: "user not exists"})}
             else if (req.body.password === u.password )
              {
-               const token = jwt.sign({ username: u.username,_id: u._id}, "secret");
+               const token = jwt.sign({ username: u.username, _id: u._id}, "secret");
                    // res.cookie("access_token", token, {
                    // httpOnly: true,
                    //  });
@@ -39,13 +39,6 @@ exports.user_login = async (req, res)=> {
 exports. create_a_account = async (req, res)=> {
 
 try {
-    const account = new user({
-        name:req.body.name,
-        username:req.body.username,
-        password:req.body.password,
-        mainpic:req.body.mainpic,
-        coverpic:req.body.coverpic,
-     });
 
 
 
@@ -63,6 +56,8 @@ const account = new user({
         password:req.body.password,
         mainpic:req.body.mainpic,
         coverpic:req.body.coverpic,
+        accounttype:req.body.accounttype,
+
   });
   account.save().then((u)=>{
       res.status(200).send(u);
